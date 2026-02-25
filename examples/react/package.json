@@ -1,0 +1,33 @@
+{
+  "name": "nextlake-example-react",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . && prettier --check ."
+  },
+  "dependencies": {
+    "@nextlake/editor": "git+ssh://git@github.com:adsurg/next-lake-editor.git#v0.1.0",
+    "@nextlake/schema": "git+ssh://git@github.com:adsurg/next-lake-schema-engine.git#v0.1.0",
+    "@nextlake/storage": "git+ssh://git@github.com:adsurg/next-lake-storage-adapter.git#v0.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.3",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.0",
+    "eslint": "^9.39.3",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "prettier": "^3.8.1",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.56.1",
+    "vite": "^6.0.0"
+  }
+}
