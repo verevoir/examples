@@ -19,9 +19,9 @@ echo "Starting Next.js dev server on port $PORT..."
 npx next dev --port "$PORT" &>/dev/null &
 SERVER_PID=$!
 
-# Wait for server to be ready
+# Wait for server to be ready (/ redirects to /article, so follow redirects)
 for i in $(seq 1 60); do
-  if curl -sf "http://localhost:$PORT" >/dev/null 2>&1; then
+  if curl -sfL "http://localhost:$PORT" >/dev/null 2>&1; then
     break
   fi
   if [ "$i" -eq 60 ]; then
@@ -61,9 +61,23 @@ check_content() {
   fi
 }
 
+check_redirect() {
+  local label="$1" url="$2" expect_location="$3"
+  local code location
+  code=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+  location=$(curl -s -o /dev/null -w "%{redirect_url}" "$url")
+  if [ "$code" = "307" ] && echo "$location" | grep -q "$expect_location"; then
+    echo "✓ $label → $code → $expect_location"
+    PASS=$((PASS + 1))
+  else
+    echo "✗ $label → $code (expected 307 → $expect_location)"
+    FAIL=$((FAIL + 1))
+  fi
+}
+
 echo ""
 echo "=== Route status checks ==="
-check_status "GET /" "http://localhost:$PORT"
+check_redirect "GET / redirects" "http://localhost:$PORT" "/article"
 check_status "GET /article" "http://localhost:$PORT/article"
 check_status "GET /author" "http://localhost:$PORT/author"
 check_status "GET /settings" "http://localhost:$PORT/settings"
@@ -73,8 +87,7 @@ check_status "GET /article/fake-id" "http://localhost:$PORT/article/fake-id"
 
 echo ""
 echo "=== Content checks ==="
-check_content "Home has NextLake branding" "http://localhost:$PORT" "NextLake"
-check_content "Home has sidebar prompt" "http://localhost:$PORT" "Select a content"
+check_content "Article list has NextLake branding" "http://localhost:$PORT/article" "NextLake"
 check_content "Article list renders" "http://localhost:$PORT/article" "Articles"
 check_content "Settings page renders" "http://localhost:$PORT/settings" "Settings"
 
