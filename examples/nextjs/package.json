@@ -10,9 +10,9 @@
     "lint": "eslint . && prettier --check ."
   },
   "dependencies": {
-    "@nextlake/editor": "git+ssh://git@github.com:adsurg/next-lake-editor.git#v0.1.0",
-    "@nextlake/schema": "git+ssh://git@github.com:adsurg/next-lake-schema-engine.git#v0.1.0",
-    "@nextlake/storage": "git+ssh://git@github.com:adsurg/next-lake-storage-adapter.git#v0.1.0",
+    "@nextlake/editor": "git+ssh://git@github.com:adsurg/next-lake-editor.git#v0.1.1",
+    "@nextlake/schema": "git+ssh://git@github.com:adsurg/next-lake-schema-engine.git#v0.1.1",
+    "@nextlake/storage": "git+ssh://git@github.com:adsurg/next-lake-storage-adapter.git#v0.1.1",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
