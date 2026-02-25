@@ -3,12 +3,22 @@ import { Sidebar } from './components/Sidebar';
 import { DocumentList } from './components/DocumentList';
 import { DocumentEditor } from './components/DocumentEditor';
 import { SettingsEditor } from './components/SettingsEditor';
-import styles from './App.module.css';
 
 export type Route =
   | { view: 'list'; blockType: string }
   | { view: 'new'; blockType: string }
   | { view: 'edit'; blockType: string; id: string };
+
+const layoutStyle: React.CSSProperties = {
+  display: 'flex',
+  minHeight: '100vh',
+};
+
+const mainStyle: React.CSSProperties = {
+  flex: 1,
+  padding: 'var(--space-xl)',
+  maxWidth: 720,
+};
 
 export function App() {
   const [route, setRoute] = useState<Route>({
@@ -43,12 +53,12 @@ export function App() {
   }
 
   return (
-    <div className={styles.layout}>
+    <div style={layoutStyle}>
       <Sidebar
         active={route.blockType}
         onNavigate={(blockType) => navigate({ view: 'list', blockType })}
       />
-      <main className={styles.main}>{content}</main>
+      <main style={mainStyle}>{content}</main>
     </div>
   );
 }
