@@ -1,10 +1,12 @@
-.PHONY: build test lint run
+.PHONY: build test lint run smoke
 
 build: ## Build for production
 	npx next build
 
-test: ## No tests configured
-	@echo "No tests configured."
+test: ## Run smoke tests
+	./smoke-test.sh
+
+smoke: test ## Alias for test
 
 lint: ## Lint and check formatting
 	npx eslint .

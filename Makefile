@@ -1,6 +1,6 @@
 EXAMPLES := examples/react examples/nextjs
 
-.PHONY: build test lint run install help
+.PHONY: build test lint run install smoke help
 
 help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-15s\033[0m %s\n", $$1, $$2}'
@@ -17,8 +17,13 @@ build: ## Build all examples
 		$(MAKE) -C $$dir build; \
 	done
 
-test: ## Run tests for all examples
-	@echo "No tests configured for examples."
+test: ## Run smoke tests for all examples
+	@for dir in $(EXAMPLES); do \
+		echo "Smoke testing $$dir..."; \
+		$(MAKE) -C $$dir test; \
+	done
+
+smoke: test ## Alias for test
 
 lint: ## Lint all examples
 	@for dir in $(EXAMPLES); do \
