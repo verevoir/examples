@@ -47,7 +47,7 @@ export function DocumentList({ blockType }: DocumentListProps) {
   const [docs, setDocs] = useState<Document[]>([]);
 
   useEffect(() => {
-    storage.list(blockType).then(setDocs);
+    storage.list(blockType, { orderBy: { createdAt: 'desc' } }).then(setDocs);
   }, [blockType]);
 
   const label = blockType.charAt(0).toUpperCase() + blockType.slice(1) + 's';

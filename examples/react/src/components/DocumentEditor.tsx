@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react';
-import { BlockEditor, useBlockForm } from '@nextlake/editor';
+import {
+  BlockEditor,
+  useBlockForm,
+  ReferenceOptionsProvider,
+} from '@nextlake/editor';
+import type { ReferenceOptionsMap } from '@nextlake/editor';
 import { storage } from '../storage';
 import { blocks } from '../blocks';
 
@@ -39,6 +44,19 @@ export function DocumentEditor({
   const block = blocks[blockType];
   const [loaded, setLoaded] = useState(false);
   const [state, actions] = useBlockForm(block, {});
+  const [refOptions, setRefOptions] = useState<ReferenceOptionsMap>({});
+
+  useEffect(() => {
+    // Load reference options (authors for article's author field)
+    storage.list('author').then((authors) => {
+      setRefOptions({
+        author: authors.map((doc) => ({
+          id: doc.id,
+          label: (doc.data as Record<string, unknown>).name as string,
+        })),
+      });
+    });
+  }, []);
 
   useEffect(() => {
     if (documentId) {
@@ -88,11 +106,13 @@ export function DocumentEditor({
           ))}
         </div>
       )}
-      <BlockEditor
-        block={block}
-        value={state.value}
-        onChange={actions.onChange}
-      />
+      <ReferenceOptionsProvider options={refOptions}>
+        <BlockEditor
+          block={block}
+          value={state.value}
+          onChange={actions.onChange}
+        />
+      </ReferenceOptionsProvider>
     </div>
   );
 }

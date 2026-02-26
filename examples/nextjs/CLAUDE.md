@@ -14,7 +14,7 @@ Data is stored in memory via `MemoryAdapter` (resets on server restart).
 
 ## Architecture
 
-- `src/blocks/` — Schema definitions using `@nextlake/schema`
+- `src/blocks/` — Content model definitions using `@nextlake/schema`
 - `src/storage.ts` — `MemoryAdapter` singleton from `@nextlake/storage`
 - `src/components/DocumentEditor.tsx` — Where all three packages converge
 - `src/app/[blockType]/` — Dynamic routes for each content type

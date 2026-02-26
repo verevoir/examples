@@ -12,7 +12,7 @@ examples/
 
 Both examples define the same three content blocks:
 
-- **Article** — text (.max), richText, select (draft/published/archived), boolean (.default)
+- **Article** — text (.max), richText, select (draft/published/archived), boolean (.default), reference (→ author)
 - **Author** — text (.max), text (.regex for email), richText (.optional), select (author/editor/admin)
 - **Settings** — text, text (.optional), number (.int.min.max.default), boolean (.default)
 

@@ -14,7 +14,7 @@ Data is stored in memory via `MemoryAdapter` (resets on page refresh).
 
 ## Architecture
 
-- `src/blocks/` — Schema definitions using `@nextlake/schema`
+- `src/blocks/` — Content model definitions using `@nextlake/schema`
 - `src/storage.ts` — `MemoryAdapter` singleton from `@nextlake/storage`
 - `src/components/DocumentEditor.tsx` — Where all three packages converge: schema defines the block, editor renders the form, storage persists the data
 - `src/App.tsx` — `useState`-based routing (no react-router)

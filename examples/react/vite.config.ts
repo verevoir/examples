@@ -53,12 +53,50 @@ export class MemoryAdapter {
     if (!this.store.has(id)) throw new Error("Document not found: " + id);
     this.store.delete(id);
   }
-  async list(blockType) {
-    const results = [];
+  async list(blockType, options) {
+    let results = [];
     for (const doc of this.store.values()) {
       if (doc.blockType === blockType) results.push(doc);
     }
+    if (options?.where) {
+      results = results.filter((doc) => {
+        for (const [k, v] of Object.entries(options.where)) {
+          const dv = k === 'createdAt' ? doc.createdAt : k === 'updatedAt' ? doc.updatedAt : doc.data[k];
+          if (v && typeof v === 'object' && !(v instanceof Date)) {
+            if (v.$contains && (typeof dv !== 'string' || !dv.toLowerCase().includes(v.$contains.toLowerCase()))) return false;
+            if (v.$gt !== undefined && dv <= v.$gt) return false;
+            if (v.$gte !== undefined && dv < v.$gte) return false;
+            if (v.$lt !== undefined && dv >= v.$lt) return false;
+            if (v.$lte !== undefined && dv > v.$lte) return false;
+            if (v.$ne !== undefined && dv === v.$ne) return false;
+          } else if (dv !== v) return false;
+        }
+        return true;
+      });
+    }
+    if (options?.orderBy) {
+      const entries = Object.entries(options.orderBy);
+      results.sort((a, b) => {
+        for (const [k, dir] of entries) {
+          const av = k === 'createdAt' ? a.createdAt : k === 'updatedAt' ? a.updatedAt : a.data[k];
+          const bv = k === 'createdAt' ? b.createdAt : k === 'updatedAt' ? b.updatedAt : b.data[k];
+          const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+          if (cmp !== 0) return dir === 'desc' ? -cmp : cmp;
+        }
+        return 0;
+      });
+    }
+    if (options?.offset) results = results.slice(options.offset);
+    if (options?.limit) results = results.slice(0, options.limit);
     return results;
+  }
+  async getMany(ids) {
+    const result = new Map();
+    for (const id of ids) {
+      const doc = this.store.get(id);
+      if (doc) result.set(id, doc);
+    }
+    return result;
   }
 }
 `;
