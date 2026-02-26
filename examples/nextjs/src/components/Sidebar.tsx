@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useUser, roles } from '@/context/UserContext';
 
 const sidebarStyle: React.CSSProperties = {
   width: 'var(--sidebar-width)',
@@ -9,12 +10,29 @@ const sidebarStyle: React.CSSProperties = {
   background: 'var(--color-surface)',
   borderRight: '1px solid var(--color-border)',
   padding: 'var(--space-md)',
+  display: 'flex',
+  flexDirection: 'column',
 };
 
 const logoStyle: React.CSSProperties = {
   fontSize: '1.125rem',
   fontWeight: 700,
   marginBottom: 'var(--space-lg)',
+};
+
+const roleSectionStyle: React.CSSProperties = {
+  marginTop: 'auto',
+  paddingTop: 'var(--space-md)',
+  borderTop: '1px solid var(--color-border)',
+};
+
+const roleLabelStyle: React.CSSProperties = {
+  fontSize: '0.6875rem',
+  fontWeight: 700,
+  textTransform: 'uppercase',
+  letterSpacing: '0.05em',
+  color: 'var(--color-text-muted)',
+  marginBottom: 'var(--space-xs)',
 };
 
 const blockTypes = [
@@ -25,6 +43,7 @@ const blockTypes = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const { role, setRole } = useUser();
 
   return (
     <nav style={sidebarStyle}>
@@ -54,6 +73,20 @@ export function Sidebar() {
           </Link>
         );
       })}
+      <div style={roleSectionStyle}>
+        <div style={roleLabelStyle}>Role</div>
+        <select
+          value={role}
+          onChange={(e) => setRole(e.target.value as typeof role)}
+          style={{ width: '100%' }}
+        >
+          {roles.map((r) => (
+            <option key={r} value={r}>
+              {r}
+            </option>
+          ))}
+        </select>
+      </div>
     </nav>
   );
 }

@@ -13,7 +13,7 @@ export const article = defineBlock({
     title: text('Title').max(120),
     author: reference('Author', 'author'),
     body: richText('Body'),
-    status: select('Status', ['draft', 'published', 'archived']),
+    status: select('Status', ['draft', 'review', 'published', 'archived']),
     featured: boolean('Featured').default(false),
   },
 });

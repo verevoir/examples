@@ -10,6 +10,7 @@
     "lint": "eslint . && prettier --check ."
   },
   "dependencies": {
+    "@nextlake/access": "git+ssh://git@github.com:adsurg/next-lake-access.git#v0.1.1",
     "@nextlake/editor": "git+ssh://git@github.com:adsurg/next-lake-editor.git#v0.2.0",
     "@nextlake/schema": "git+ssh://git@github.com:adsurg/next-lake-schema-engine.git#v0.2.0",
     "@nextlake/storage": "git+ssh://git@github.com:adsurg/next-lake-storage-adapter.git#v0.2.0",

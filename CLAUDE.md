@@ -1,6 +1,6 @@
 # NextLake Examples
 
-Two example apps demonstrating all three NextLake v1 packages (`@nextlake/schema`, `@nextlake/storage`, `@nextlake/editor`) working together end-to-end.
+Two example apps demonstrating all four NextLake v1 packages (`@nextlake/schema`, `@nextlake/storage`, `@nextlake/editor`, `@nextlake/access`) working together end-to-end.
 
 ## Structure
 
@@ -12,17 +12,28 @@ examples/
 
 Both examples define the same three content blocks:
 
-- **Article** — text (.max), richText, select (draft/published/archived), boolean (.default), reference (→ author)
+- **Article** — text (.max), richText, select (draft/review/published/archived), boolean (.default), reference (→ author)
 - **Author** — text (.max), text (.regex for email), richText (.optional), select (author/editor/admin)
 - **Settings** — text, text (.optional), number (.int.min.max.default), boolean (.default)
 
 Block definitions are intentionally duplicated (not shared) to mirror real user usage.
+
+## Access Control Integration
+
+Both examples integrate `@nextlake/access` for role-based access control and editorial workflows:
+
+- **Mock auth** — role switcher dropdown in the sidebar (admin/editor/author/viewer)
+- **Content policy** — CRUD permissions per role, with scope:own for author update/delete
+- **Publishing workflow** — draft → review → published → archived with guard-protected transitions
+- **StatusField override** — replaces the default select with a workflow-aware component showing transition buttons
+- **Ownership tracking** — `data.createdBy` set on create, preserved on update, used for scope:own evaluation
 
 ## Integration Pattern
 
 1. Schema Engine defines blocks
 2. Editor renders forms and manages state via `useBlockForm`
 3. Storage persists via `MemoryAdapter`
+4. Access controls who can do what, and drives workflow transitions
 
 Settings uses a singleton pattern (one document). Article and Author use a collection pattern (list + create/edit).
 

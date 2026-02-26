@@ -104,7 +104,7 @@ const article = defineBlock({
   fields: {
     title: text('Title').max(120),
     body: richText('Body'),
-    status: select('Status', ['draft', 'published', 'archived']),
+    status: select('Status', ['draft', 'review', 'published', 'archived']),
     featured: boolean('Featured').default(false),
   },
 });
@@ -172,6 +172,112 @@ await storage.delete(doc.id);
 const after = await storage.list('article');
 console.log(`✓ Delete article: ${after.length} remaining`);
 NODETEST
+
+echo ""
+echo "=== Node integration: access control ==="
+node --input-type=module << 'ACCESSTEST'
+import { defineAuthAdapter, definePolicy, defineWorkflow, hasRole, or } from '@nextlake/access';
+
+// Auth adapter
+const auth = defineAuthAdapter({
+  resolve: async (token) => {
+    const users = {
+      admin: { id: 'user-admin', roles: ['admin'] },
+      editor: { id: 'user-editor', roles: ['editor'] },
+      author: { id: 'user-author', roles: ['author'] },
+      viewer: { id: 'user-viewer', roles: ['viewer'] },
+    };
+    return users[token] ?? null;
+  },
+});
+
+const admin = await auth.resolve('admin');
+const editor = await auth.resolve('editor');
+const authorUser = await auth.resolve('author');
+const viewer = await auth.resolve('viewer');
+const unknown = await auth.resolve('unknown');
+
+if (admin && editor && authorUser && viewer && !unknown) {
+  console.log('✓ Auth adapter resolves all roles');
+} else {
+  console.log('✗ Auth adapter failed'); process.exit(1);
+}
+
+// Policy
+const policy = definePolicy({
+  rules: [
+    { role: 'admin', actions: ['create', 'read', 'update', 'delete'] },
+    { role: 'editor', actions: ['create', 'read', 'update'] },
+    { role: 'author', actions: ['create', 'read'] },
+    { role: 'author', actions: ['update', 'delete'], scope: 'own' },
+    { role: 'viewer', actions: ['read'] },
+  ],
+});
+
+// Admin can do everything
+if (policy.can(admin, 'delete')) {
+  console.log('✓ Admin can delete');
+} else { console.log('✗ Admin should delete'); process.exit(1); }
+
+// Editor cannot delete
+if (!policy.can(editor, 'delete')) {
+  console.log('✓ Editor cannot delete');
+} else { console.log('✗ Editor should not delete'); process.exit(1); }
+
+// Author can update own
+if (policy.can(authorUser, 'update', { ownerId: 'user-author' })) {
+  console.log('✓ Author can update own');
+} else { console.log('✗ Author should update own'); process.exit(1); }
+
+// Author cannot update others
+if (!policy.can(authorUser, 'update', { ownerId: 'user-admin' })) {
+  console.log('✓ Author cannot update others');
+} else { console.log('✗ Author should not update others'); process.exit(1); }
+
+// Viewer can only read
+if (policy.can(viewer, 'read') && !policy.can(viewer, 'create')) {
+  console.log('✓ Viewer can read only');
+} else { console.log('✗ Viewer permissions wrong'); process.exit(1); }
+
+// Workflow
+const publishing = defineWorkflow({
+  name: 'publishing',
+  states: ['draft', 'review', 'published', 'archived'],
+  initial: 'draft',
+  transitions: [
+    { from: 'draft', to: 'review', guard: or(hasRole('author'), hasRole('editor'), hasRole('admin')) },
+    { from: 'review', to: 'published', guard: or(hasRole('editor'), hasRole('admin')) },
+    { from: 'review', to: 'draft', guard: or(hasRole('author'), hasRole('editor'), hasRole('admin')) },
+    { from: 'published', to: 'archived', guard: hasRole('admin') },
+  ],
+});
+
+// Author can submit for review
+if (publishing.canTransition('draft', 'review', authorUser)) {
+  console.log('✓ Author can submit for review');
+} else { console.log('✗ Author should submit for review'); process.exit(1); }
+
+// Author cannot publish
+if (!publishing.canTransition('review', 'published', authorUser)) {
+  console.log('✓ Author cannot publish');
+} else { console.log('✗ Author should not publish'); process.exit(1); }
+
+// Editor can publish
+if (publishing.canTransition('review', 'published', editor)) {
+  console.log('✓ Editor can publish');
+} else { console.log('✗ Editor should publish'); process.exit(1); }
+
+// Admin can archive
+if (publishing.canTransition('published', 'archived', admin)) {
+  console.log('✓ Admin can archive');
+} else { console.log('✗ Admin should archive'); process.exit(1); }
+
+// Viewer has no transitions from draft
+const viewerTransitions = publishing.availableTransitions('draft', viewer);
+if (viewerTransitions.length === 0) {
+  console.log('✓ Viewer has no workflow transitions');
+} else { console.log('✗ Viewer should have no transitions'); process.exit(1); }
+ACCESSTEST
 
 echo ""
 if [ "$FAIL" -gt 0 ]; then

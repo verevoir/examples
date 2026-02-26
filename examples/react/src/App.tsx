@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { UserProvider } from './context/UserContext';
 import { Sidebar } from './components/Sidebar';
 import { DocumentList } from './components/DocumentList';
 import { DocumentEditor } from './components/DocumentEditor';
@@ -53,12 +54,14 @@ export function App() {
   }
 
   return (
-    <div style={layoutStyle}>
-      <Sidebar
-        active={route.blockType}
-        onNavigate={(blockType) => navigate({ view: 'list', blockType })}
-      />
-      <main style={mainStyle}>{content}</main>
-    </div>
+    <UserProvider>
+      <div style={layoutStyle}>
+        <Sidebar
+          active={route.blockType}
+          onNavigate={(blockType) => navigate({ view: 'list', blockType })}
+        />
+        <main style={mainStyle}>{content}</main>
+      </div>
+    </UserProvider>
   );
 }

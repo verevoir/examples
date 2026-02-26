@@ -7,9 +7,11 @@ import {
   useBlockForm,
   ReferenceOptionsProvider,
 } from '@nextlake/editor';
-import type { ReferenceOptionsMap } from '@nextlake/editor';
+import type { ReferenceOptionsMap, FieldOverrides } from '@nextlake/editor';
 import { storage } from '@/storage';
 import { blocks } from '@/blocks';
+import { useUser } from '@/context/UserContext';
+import { StatusField } from './StatusField';
 
 interface DocumentEditorProps {
   blockType: string;
@@ -27,6 +29,12 @@ const saveBtnStyle: React.CSSProperties = {
   color: '#fff',
 };
 
+const disabledBtnStyle: React.CSSProperties = {
+  background: 'var(--color-border)',
+  color: 'var(--color-text-muted)',
+  cursor: 'not-allowed',
+};
+
 const backBtnStyle: React.CSSProperties = {
   background: 'var(--color-border)',
   color: 'var(--color-text)',
@@ -38,12 +46,16 @@ const errorStyle: React.CSSProperties = {
   marginBottom: 'var(--space-md)',
 };
 
+const articleOverrides: FieldOverrides = { status: StatusField };
+
 export function DocumentEditor({ blockType, documentId }: DocumentEditorProps) {
   const router = useRouter();
   const block = blocks[blockType];
   const [loaded, setLoaded] = useState(false);
   const [state, actions] = useBlockForm(block, {});
   const [refOptions, setRefOptions] = useState<ReferenceOptionsMap>({});
+  const [createdBy, setCreatedBy] = useState<string | undefined>(undefined);
+  const { identity, can } = useUser();
 
   useEffect(() => {
     storage.list('author').then((authors) => {
@@ -60,7 +72,9 @@ export function DocumentEditor({ blockType, documentId }: DocumentEditorProps) {
     if (documentId) {
       storage.get(documentId).then((doc) => {
         if (doc) {
-          actions.onChange(doc.data as Record<string, unknown>);
+          const data = doc.data as Record<string, unknown>;
+          setCreatedBy(data.createdBy as string | undefined);
+          actions.onChange(data);
         }
         setLoaded(true);
       });
@@ -70,12 +84,19 @@ export function DocumentEditor({ blockType, documentId }: DocumentEditorProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documentId]);
 
+  const isNew = !documentId;
+  const canSave = isNew ? can('create') : can('update', { ownerId: createdBy });
+
   const handleSave = async () => {
+    if (!canSave) return;
     if (!actions.validate()) return;
     if (documentId) {
-      await storage.update(documentId, state.value);
+      await storage.update(documentId, { ...state.value, createdBy });
     } else {
-      await storage.create(blockType, state.value);
+      await storage.create(blockType, {
+        ...state.value,
+        createdBy: identity.id,
+      });
     }
     router.push(`/${blockType}`);
   };
@@ -83,6 +104,7 @@ export function DocumentEditor({ blockType, documentId }: DocumentEditorProps) {
   if (!loaded) return null;
 
   const label = blockType.charAt(0).toUpperCase() + blockType.slice(1);
+  const overrides = blockType === 'article' ? articleOverrides : undefined;
 
   return (
     <div>
@@ -94,7 +116,11 @@ export function DocumentEditor({ blockType, documentId }: DocumentEditorProps) {
         >
           Back
         </button>
-        <button style={saveBtnStyle} onClick={handleSave}>
+        <button
+          style={canSave ? saveBtnStyle : disabledBtnStyle}
+          onClick={handleSave}
+          disabled={!canSave}
+        >
           Save
         </button>
       </div>
@@ -112,6 +138,7 @@ export function DocumentEditor({ blockType, documentId }: DocumentEditorProps) {
           block={block}
           value={state.value}
           onChange={actions.onChange}
+          overrides={overrides}
         />
       </ReferenceOptionsProvider>
     </div>

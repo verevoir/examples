@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type { Document } from '@nextlake/storage';
 import { storage } from '../storage';
+import { useUser } from '../context/UserContext';
 
 interface DocumentListProps {
   blockType: string;
@@ -31,6 +32,12 @@ const rowStyle: React.CSSProperties = {
   marginBottom: 'var(--space-sm)',
 };
 
+const deleteBtnStyle: React.CSSProperties = {
+  background: 'var(--color-danger)',
+  color: '#fff',
+  marginLeft: 'var(--space-xs)',
+};
+
 function displayName(doc: Document): string {
   const data = doc.data as Record<string, unknown>;
   const name = data.title ?? data.name ?? data.siteName;
@@ -39,10 +46,20 @@ function displayName(doc: Document): string {
 
 export function DocumentList({ blockType, onNew, onEdit }: DocumentListProps) {
   const [docs, setDocs] = useState<Document[]>([]);
+  const { can } = useUser();
 
-  useEffect(() => {
+  const loadDocs = useCallback(() => {
     storage.list(blockType, { orderBy: { createdAt: 'desc' } }).then(setDocs);
   }, [blockType]);
+
+  useEffect(() => {
+    loadDocs();
+  }, [loadDocs]);
+
+  const handleDelete = async (doc: Document) => {
+    await storage.delete(doc.id);
+    loadDocs();
+  };
 
   const label = blockType.charAt(0).toUpperCase() + blockType.slice(1) + 's';
 
@@ -50,26 +67,42 @@ export function DocumentList({ blockType, onNew, onEdit }: DocumentListProps) {
     <div>
       <div style={headerStyle}>
         <h1>{label}</h1>
-        <button style={newBtnStyle} onClick={onNew}>
-          New {blockType}
-        </button>
+        {can('create') && (
+          <button style={newBtnStyle} onClick={onNew}>
+            New {blockType}
+          </button>
+        )}
       </div>
       {docs.length === 0 && (
         <p style={{ color: 'var(--color-text-muted)' }}>
           No {blockType}s yet. Create one to get started.
         </p>
       )}
-      {docs.map((doc) => (
-        <div key={doc.id} style={rowStyle}>
-          <span>{displayName(doc)}</span>
-          <button
-            style={{ background: 'var(--color-primary)', color: '#fff' }}
-            onClick={() => onEdit(doc.id)}
-          >
-            Edit
-          </button>
-        </div>
-      ))}
+      {docs.map((doc) => {
+        const ownerId = (doc.data as Record<string, unknown>)
+          .createdBy as string;
+        return (
+          <div key={doc.id} style={rowStyle}>
+            <span>{displayName(doc)}</span>
+            <div style={{ display: 'flex', gap: 'var(--space-xs)' }}>
+              <button
+                style={{ background: 'var(--color-primary)', color: '#fff' }}
+                onClick={() => onEdit(doc.id)}
+              >
+                Edit
+              </button>
+              {can('delete', { ownerId }) && (
+                <button
+                  style={deleteBtnStyle}
+                  onClick={() => handleDelete(doc)}
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

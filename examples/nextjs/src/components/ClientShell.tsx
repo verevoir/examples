@@ -1,5 +1,6 @@
 'use client';
 
+import { UserProvider } from '@/context/UserContext';
 import { Sidebar } from './Sidebar';
 
 const layoutStyle: React.CSSProperties = {
@@ -15,9 +16,11 @@ const mainStyle: React.CSSProperties = {
 
 export function ClientShell({ children }: { children: React.ReactNode }) {
   return (
-    <div style={layoutStyle}>
-      <Sidebar />
-      <main style={mainStyle}>{children}</main>
-    </div>
+    <UserProvider>
+      <div style={layoutStyle}>
+        <Sidebar />
+        <main style={mainStyle}>{children}</main>
+      </div>
+    </UserProvider>
   );
 }
