@@ -149,6 +149,65 @@ console.log(`✓ Delete article: ${after.length} remaining`);
 NODETEST
 
 echo ""
+echo "=== Node integration: assets + media ==="
+node --input-type=module << 'ASSETTEST'
+import { AssetManager, MemoryBlobStore } from '@nextlake/assets';
+import { MemoryAdapter } from '@nextlake/storage';
+import { createAssetSource, buildImageUrl } from '@nextlake/media';
+
+const storage = new MemoryAdapter();
+const blobStore = new MemoryBlobStore();
+const manager = new AssetManager({ storage, blobStore });
+
+// Upload a minimal file
+const data = new Uint8Array([0x89, 0x50, 0x4e, 0x47]); // PNG magic bytes
+const asset = await manager.upload({
+  data,
+  filename: 'test.png',
+  contentType: 'image/png',
+  createdBy: 'user-admin',
+});
+if (asset.id && asset.filename === 'test.png' && asset.contentType === 'image/png' && asset.blobKey) {
+  console.log('✓ Upload asset');
+} else { console.log('✗ Upload asset'); process.exit(1); }
+
+// Update metadata with hotspot
+const updated = await manager.updateMetadata(asset.id, { hotspot: { x: 0.5, y: 0.3 } });
+if (updated.hotspot && updated.hotspot.x === 0.5 && updated.hotspot.y === 0.3) {
+  console.log('✓ Set hotspot');
+} else { console.log('✗ Set hotspot'); process.exit(1); }
+
+// Create AssetSource and get asset info
+const source = createAssetSource({
+  manager,
+  blobUrl: (key) => `http://localhost/${key}`,
+});
+const info = await source.getAsset(asset.id);
+if (info && info.id === asset.id && info.filename === 'test.png' && info.hotspot) {
+  console.log('✓ AssetSource getAsset');
+} else { console.log('✗ AssetSource getAsset'); process.exit(1); }
+
+// Build imgproxy URL
+const url = buildImageUrl(info, { width: 400, height: 300 }, { baseUrl: 'https://imgproxy.example.com' });
+if (url.startsWith('https://imgproxy.example.com/') && url.includes('400') && url.includes('300')) {
+  console.log('✓ buildImageUrl');
+} else { console.log('✗ buildImageUrl: ' + url); process.exit(1); }
+
+// List assets
+const list = await manager.list();
+if (list.length === 1 && list[0].id === asset.id) {
+  console.log('✓ List assets');
+} else { console.log('✗ List assets'); process.exit(1); }
+
+// Delete asset
+await manager.delete(asset.id);
+const afterDelete = await manager.list();
+if (afterDelete.length === 0) {
+  console.log('✓ Delete asset');
+} else { console.log('✗ Delete asset'); process.exit(1); }
+ASSETTEST
+
+echo ""
 echo "=== Node integration: access control ==="
 node --input-type=module << 'ACCESSTEST'
 import { defineAuthAdapter, definePolicy, defineWorkflow, hasRole, or } from '@nextlake/access';

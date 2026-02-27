@@ -14,6 +14,7 @@ export const article = defineBlock({
     author: reference('Author', 'author'),
     body: richText('Body'),
     status: select('Status', ['draft', 'review', 'published', 'archived']),
+    heroImage: reference('Hero Image', 'asset'),
     featured: boolean('Featured').default(false),
   },
 });

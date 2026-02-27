@@ -1,7 +1,9 @@
 'use client';
 
+import { AssetSourceProvider, ImgproxyConfigProvider } from '@nextlake/media';
 import { UserProvider } from '@/context/UserContext';
 import { Sidebar } from './Sidebar';
+import { source, imgproxyConfig } from '@/assets';
 
 const layoutStyle: React.CSSProperties = {
   display: 'flex',
@@ -17,10 +19,14 @@ const mainStyle: React.CSSProperties = {
 export function ClientShell({ children }: { children: React.ReactNode }) {
   return (
     <UserProvider>
-      <div style={layoutStyle}>
-        <Sidebar />
-        <main style={mainStyle}>{children}</main>
-      </div>
+      <AssetSourceProvider source={source}>
+        <ImgproxyConfigProvider config={imgproxyConfig}>
+          <div style={layoutStyle}>
+            <Sidebar />
+            <main style={mainStyle}>{children}</main>
+          </div>
+        </ImgproxyConfigProvider>
+      </AssetSourceProvider>
     </UserProvider>
   );
 }

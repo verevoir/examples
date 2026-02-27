@@ -13,6 +13,8 @@
     "@nextlake/access": "git+ssh://git@github.com:adsurg/next-lake-access.git#v0.1.1",
     "@nextlake/editor": "git+ssh://git@github.com:adsurg/next-lake-editor.git#v0.2.0",
     "@nextlake/schema": "git+ssh://git@github.com:adsurg/next-lake-schema-engine.git#v0.2.0",
+    "@nextlake/assets": "git+ssh://git@github.com:adsurg/next-lake-assets.git#main",
+    "@nextlake/media": "git+ssh://git@github.com:adsurg/next-lake-media.git#main",
     "@nextlake/storage": "git+ssh://git@github.com:adsurg/next-lake-storage-adapter.git#v0.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

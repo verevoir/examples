@@ -104,6 +104,25 @@ export class MemoryAdapter {
   };
 }
 
+/**
+ * `sharp` is a native Node module used by @nextlake/assets for image
+ * dimension extraction. It cannot load in the browser. This plugin
+ * provides a no-op shim so Vite's dev pre-bundling doesn't crash.
+ */
+function browserSharp(): Plugin {
+  const VIRTUAL = '\0sharp';
+  return {
+    name: 'nextlake-browser-sharp',
+    enforce: 'pre',
+    resolveId(id) {
+      if (id === 'sharp') return VIRTUAL;
+    },
+    load(id) {
+      if (id === VIRTUAL) return 'export default null;';
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react(), browserStorage()],
+  plugins: [react(), browserStorage(), browserSharp()],
 });

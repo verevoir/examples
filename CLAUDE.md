@@ -1,6 +1,6 @@
 # NextLake Examples
 
-Two example apps demonstrating all four NextLake v1 packages (`@nextlake/schema`, `@nextlake/storage`, `@nextlake/editor`, `@nextlake/access`) working together end-to-end.
+Two example apps demonstrating all six NextLake packages (`@nextlake/schema`, `@nextlake/storage`, `@nextlake/editor`, `@nextlake/access`, `@nextlake/assets`, `@nextlake/media`) working together end-to-end.
 
 ## Structure
 
@@ -10,11 +10,12 @@ examples/
   nextjs/   — Next.js App Router with file-system routes
 ```
 
-Both examples define the same three content blocks:
+Both examples define the same three content blocks plus an asset management page:
 
-- **Article** — text (.max), richText, select (draft/review/published/archived), boolean (.default), reference (→ author)
+- **Article** — text (.max), richText, select (draft/review/published/archived), boolean (.default), reference (→ author), reference (→ asset for hero image)
 - **Author** — text (.max), text (.regex for email), richText (.optional), select (author/editor/admin)
 - **Settings** — text, text (.optional), number (.int.min.max.default), boolean (.default)
+- **Assets** — upload images/videos, set hotspots, view generated imgproxy URLs
 
 Block definitions are intentionally duplicated (not shared) to mirror real user usage.
 
@@ -28,12 +29,26 @@ Both examples integrate `@nextlake/access` for role-based access control and edi
 - **StatusField override** — replaces the default select with a workflow-aware component showing transition buttons
 - **Ownership tracking** — `data.createdBy` set on create, preserved on update, used for scope:own evaluation
 
+## Asset + Media Integration
+
+Both examples integrate `@nextlake/assets` and `@nextlake/media` for asset management:
+
+- **AssetManager** — `MemoryBlobStore` + `MemoryAdapter` for in-memory asset storage
+- **AssetSource** — bridges AssetManager to media components via `createAssetSource`
+- **Object URLs** — `URL.createObjectURL()` for browser-side image preview (no real blob server)
+- **Fake imgproxy** — `https://imgproxy.example.com` base URL; generated URLs shown as text
+- **HeroImageField** — thin wrapper adapting `@nextlake/media`'s `ImageField` to the editor's `FieldEditorProps`
+- **AssetBrowser** — upload, list, preview, hotspot editing via `HotspotOverlay`, imgproxy URL display
+- **Providers** — `AssetSourceProvider` and `ImgproxyConfigProvider` wrap the app
+
 ## Integration Pattern
 
 1. Schema Engine defines blocks
 2. Editor renders forms and manages state via `useBlockForm`
 3. Storage persists via `MemoryAdapter`
 4. Access controls who can do what, and drives workflow transitions
+5. Assets manages binary uploads and metadata
+6. Media provides image display, URL building, and asset picker components
 
 Settings uses a singleton pattern (one document). Article and Author use a collection pattern (list + create/edit).
 

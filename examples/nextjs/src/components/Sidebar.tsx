@@ -38,6 +38,7 @@ const roleLabelStyle: React.CSSProperties = {
 const blockTypes = [
   { key: 'article', label: 'Articles' },
   { key: 'author', label: 'Authors' },
+  { key: 'assets', label: 'Assets' },
   { key: 'settings', label: 'Settings' },
 ];
 

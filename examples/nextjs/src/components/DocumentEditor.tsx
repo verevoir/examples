@@ -12,6 +12,7 @@ import { storage } from '@/storage';
 import { blocks } from '@/blocks';
 import { useUser } from '@/context/UserContext';
 import { StatusField } from './StatusField';
+import { HeroImageField } from './HeroImageField';
 
 interface DocumentEditorProps {
   blockType: string;
@@ -46,7 +47,10 @@ const errorStyle: React.CSSProperties = {
   marginBottom: 'var(--space-md)',
 };
 
-const articleOverrides: FieldOverrides = { status: StatusField };
+const articleOverrides: FieldOverrides = {
+  status: StatusField,
+  heroImage: HeroImageField,
+};
 
 export function DocumentEditor({ blockType, documentId }: DocumentEditorProps) {
   const router = useRouter();

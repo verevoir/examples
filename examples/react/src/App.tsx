@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { AssetSourceProvider, ImgproxyConfigProvider } from '@nextlake/media';
 import { UserProvider } from './context/UserContext';
 import { Sidebar } from './components/Sidebar';
 import { DocumentList } from './components/DocumentList';
 import { DocumentEditor } from './components/DocumentEditor';
 import { SettingsEditor } from './components/SettingsEditor';
+import { AssetBrowser } from './components/AssetBrowser';
+import { source, imgproxyConfig } from './assets';
 
 export type Route =
   | { view: 'list'; blockType: string }
@@ -31,7 +34,9 @@ export function App() {
 
   let content: React.ReactNode;
 
-  if (route.blockType === 'settings') {
+  if (route.blockType === 'assets') {
+    content = <AssetBrowser />;
+  } else if (route.blockType === 'settings') {
     content = <SettingsEditor />;
   } else if (route.view === 'list') {
     content = (
@@ -55,13 +60,17 @@ export function App() {
 
   return (
     <UserProvider>
-      <div style={layoutStyle}>
-        <Sidebar
-          active={route.blockType}
-          onNavigate={(blockType) => navigate({ view: 'list', blockType })}
-        />
-        <main style={mainStyle}>{content}</main>
-      </div>
+      <AssetSourceProvider source={source}>
+        <ImgproxyConfigProvider config={imgproxyConfig}>
+          <div style={layoutStyle}>
+            <Sidebar
+              active={route.blockType}
+              onNavigate={(blockType) => navigate({ view: 'list', blockType })}
+            />
+            <main style={mainStyle}>{content}</main>
+          </div>
+        </ImgproxyConfigProvider>
+      </AssetSourceProvider>
     </UserProvider>
   );
 }
