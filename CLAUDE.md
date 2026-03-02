@@ -30,6 +30,7 @@ Both examples integrate `@nextlake/access` for role-based access control and edi
 - **StatusField override** — replaces the default select with a workflow-aware component showing transition buttons
 - **Ownership tracking** — `data.createdBy` set on create, preserved on update, used for scope:own evaluation
 - **Anonymous identity** — `ANONYMOUS` from `@nextlake/access` used as the default unauthenticated state in Next.js
+- **Role store** — Next.js example uses `createRoleStore` from `@nextlake/access/role-store` for persistent role assignments, with a `/roles` admin page for managing user→role mappings
 
 ## Asset + Media Integration
 

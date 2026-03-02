@@ -10,6 +10,7 @@ Renders a content management interface with three content types plus an asset ma
 - **Author** — collection of authors with name, email, bio, and role
 - **Settings** — singleton site settings with name, tagline, posts per page, and maintenance mode
 - **Assets** — upload images/videos, set hotspots, view generated imgproxy URLs
+- **Roles** — admin-only role assignment management page
 
 Data is stored in memory via `MemoryAdapter` (resets on server restart).
 
@@ -21,13 +22,16 @@ Data is stored in memory via `MemoryAdapter` (resets on server restart).
 - `src/access/auth.ts` — Simulated Google auth adapter with three mock accounts; falls back to `ANONYMOUS` for unauthenticated requests
 - `src/access/policy.ts` — Content policy with admin/editor/author/viewer rules
 - `src/access/workflow.ts` — Publishing workflow (draft → review → published → archived)
+- `src/access/roles.ts` — `roleStore` singleton via `createRoleStore` from `@nextlake/access/role-store`, with seed admin for first deploy
 - `src/context/UserContext.tsx` — React context providing identity, signIn/signOut, `can()`, and workflow
 - `src/components/AuthButton.tsx` — Sign in (account picker) / sign out button with user info display
 - `src/components/StatusField.tsx` — Workflow-driven status badge + transition buttons (editor override)
 - `src/components/HeroImageField.tsx` — `ImageField` wrapper adapting `@nextlake/media` to editor's `FieldEditorProps`
 - `src/components/AssetBrowser.tsx` — Asset management page: upload, list, preview, hotspot editing, imgproxy URL display
+- `src/components/RoleBrowser.tsx` — Admin-gated role management page: list, assign, and remove user→role mappings
 - `src/components/DocumentEditor.tsx` — Where all six packages converge
 - `src/app/assets/` — Static route for asset management (takes priority over `[blockType]` dynamic route)
+- `src/app/roles/` — Static route for role management (admin-only, takes priority over `[blockType]` dynamic route)
 - `src/app/[blockType]/` — Dynamic routes for each content type
 - `src/components/ClientShell.tsx` — Client boundary wrapping sidebar + content, wrapped in `UserProvider`, `AssetSourceProvider`, and `ImgproxyConfigProvider`
 
