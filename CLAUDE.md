@@ -23,11 +23,13 @@ Block definitions are intentionally duplicated (not shared) to mirror real user 
 
 Both examples integrate `@nextlake/access` for role-based access control and editorial workflows:
 
-- **Mock auth** — role switcher dropdown in the sidebar (admin/editor/author/viewer)
+- **React** — mock auth with role switcher dropdown in the sidebar (admin/editor/author/viewer)
+- **Next.js** — simulated Google auth with sign in/out; starts anonymous (read-only), sign in to get editing controls
 - **Content policy** — CRUD permissions per role, with scope:own for author update/delete
 - **Publishing workflow** — draft → review → published → archived with guard-protected transitions
 - **StatusField override** — replaces the default select with a workflow-aware component showing transition buttons
 - **Ownership tracking** — `data.createdBy` set on create, preserved on update, used for scope:own evaluation
+- **Anonymous identity** — `ANONYMOUS` from `@nextlake/access` used as the default unauthenticated state in Next.js
 
 ## Asset + Media Integration
 

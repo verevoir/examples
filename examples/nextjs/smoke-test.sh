@@ -235,7 +235,7 @@ ASSETTEST
 echo ""
 echo "=== Node integration: access control ==="
 node --input-type=module << 'ACCESSTEST'
-import { defineAuthAdapter, definePolicy, defineWorkflow, hasRole, or } from '@nextlake/access';
+import { defineAuthAdapter, definePolicy, defineWorkflow, hasRole, or, ANONYMOUS, isAnonymous } from '@nextlake/access';
 
 // Auth adapter
 const auth = defineAuthAdapter({
@@ -336,6 +336,24 @@ const viewerTransitions = publishing.availableTransitions('draft', viewer);
 if (viewerTransitions.length === 0) {
   console.log('✓ Viewer has no workflow transitions');
 } else { console.log('✗ Viewer should have no transitions'); process.exit(1); }
+
+// Anonymous identity
+if (isAnonymous(ANONYMOUS)) {
+  console.log('✓ isAnonymous(ANONYMOUS) === true');
+} else { console.log('✗ isAnonymous should be true for ANONYMOUS'); process.exit(1); }
+
+if (policy.can(ANONYMOUS, 'read')) {
+  console.log('✓ ANONYMOUS can read');
+} else { console.log('✗ ANONYMOUS should be able to read'); process.exit(1); }
+
+if (!policy.can(ANONYMOUS, 'create')) {
+  console.log('✓ ANONYMOUS cannot create');
+} else { console.log('✗ ANONYMOUS should not create'); process.exit(1); }
+
+const anonTransitions = publishing.availableTransitions('draft', ANONYMOUS);
+if (anonTransitions.length === 0) {
+  console.log('✓ ANONYMOUS has no workflow transitions');
+} else { console.log('✗ ANONYMOUS should have no transitions'); process.exit(1); }
 ACCESSTEST
 
 echo ""
