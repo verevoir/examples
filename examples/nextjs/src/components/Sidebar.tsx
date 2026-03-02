@@ -31,6 +31,7 @@ const blockTypes = [
   { key: 'author', label: 'Authors' },
   { key: 'assets', label: 'Assets' },
   { key: 'settings', label: 'Settings' },
+  { key: 'roles', label: 'Roles' },
 ];
 
 export function Sidebar() {
