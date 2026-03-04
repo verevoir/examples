@@ -1,6 +1,6 @@
 'use client';
 
-import { AssetSourceProvider, ImgproxyConfigProvider } from '@nextlake/media';
+import { AssetSourceProvider, ImgproxyConfigProvider } from '@verevoir/media';
 import { UserProvider } from '@/context/UserContext';
 import { Sidebar } from './Sidebar';
 import { source, imgproxyConfig } from '@/assets';

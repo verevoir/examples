@@ -1,6 +1,6 @@
 # NextLake Examples
 
-Two example apps demonstrating all six NextLake packages (`@nextlake/schema`, `@nextlake/storage`, `@nextlake/editor`, `@nextlake/access`, `@nextlake/assets`, `@nextlake/media`) working together end-to-end.
+Two example apps demonstrating all six NextLake packages (`@verevoir/schema`, `@verevoir/storage`, `@verevoir/editor`, `@verevoir/access`, `@verevoir/assets`, `@verevoir/media`) working together end-to-end.
 
 ## Structure
 
@@ -21,7 +21,7 @@ Block definitions are intentionally duplicated (not shared) to mirror real user 
 
 ## Access Control Integration
 
-Both examples integrate `@nextlake/access` for role-based access control and editorial workflows:
+Both examples integrate `@verevoir/access` for role-based access control and editorial workflows:
 
 - **React** — mock auth with role switcher dropdown in the sidebar (admin/editor/author/viewer)
 - **Next.js** — simulated Google auth with sign in/out; starts anonymous (read-only), sign in to get editing controls
@@ -29,18 +29,18 @@ Both examples integrate `@nextlake/access` for role-based access control and edi
 - **Publishing workflow** — draft → review → published → archived with guard-protected transitions
 - **StatusField override** — replaces the default select with a workflow-aware component showing transition buttons
 - **Ownership tracking** — `data.createdBy` set on create, preserved on update, used for scope:own evaluation
-- **Anonymous identity** — `ANONYMOUS` from `@nextlake/access` used as the default unauthenticated state in Next.js
-- **Role store** — Next.js example uses `createRoleStore` from `@nextlake/access/role-store` for persistent role assignments, with a `/roles` admin page for managing user→role mappings
+- **Anonymous identity** — `ANONYMOUS` from `@verevoir/access` used as the default unauthenticated state in Next.js
+- **Role store** — Next.js example uses `createRoleStore` from `@verevoir/access/role-store` for persistent role assignments, with a `/roles` admin page for managing user→role mappings
 
 ## Asset + Media Integration
 
-Both examples integrate `@nextlake/assets` and `@nextlake/media` for asset management:
+Both examples integrate `@verevoir/assets` and `@verevoir/media` for asset management:
 
 - **AssetManager** — `MemoryBlobStore` + `MemoryAdapter` for in-memory asset storage
 - **AssetSource** — bridges AssetManager to media components via `createAssetSource`
 - **Object URLs** — `URL.createObjectURL()` for browser-side image preview (no real blob server)
 - **Fake imgproxy** — `https://imgproxy.example.com` base URL; generated URLs shown as text
-- **HeroImageField** — thin wrapper adapting `@nextlake/media`'s `ImageField` to the editor's `FieldEditorProps`
+- **HeroImageField** — thin wrapper adapting `@verevoir/media`'s `ImageField` to the editor's `FieldEditorProps`
 - **AssetBrowser** — upload, list, preview, hotspot editing via `HotspotOverlay`, imgproxy URL display
 - **Providers** — `AssetSourceProvider` and `ImgproxyConfigProvider` wrap the app
 

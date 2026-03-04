@@ -1,4 +1,4 @@
-import { defineWorkflow, hasRole, or } from '@nextlake/access';
+import { defineWorkflow, hasRole, or } from '@verevoir/access';
 
 export const publishing = defineWorkflow({
   name: 'publishing',

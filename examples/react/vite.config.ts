@@ -2,7 +2,7 @@ import { defineConfig, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
 
 /**
- * @nextlake/storage bundles both MemoryAdapter and PostgresAdapter in a
+ * @verevoir/storage bundles both MemoryAdapter and PostgresAdapter in a
  * single entry point. PostgresAdapter pulls in `pg`, which needs Node-only
  * globals (Buffer, process, events, net, etc.) and crashes in the browser.
  *
@@ -12,12 +12,12 @@ import react from '@vitejs/plugin-react';
  * (esbuild) cannot — so this plugin is necessary for dev mode.
  */
 function browserStorage(): Plugin {
-  const VIRTUAL = '\0@nextlake/storage';
+  const VIRTUAL = '\0@verevoir/storage';
   return {
-    name: 'nextlake-browser-storage',
+    name: 'verevoir-browser-storage',
     enforce: 'pre',
     resolveId(id) {
-      if (id === '@nextlake/storage') return VIRTUAL;
+      if (id === '@verevoir/storage') return VIRTUAL;
     },
     load(id) {
       if (id !== VIRTUAL) return;
@@ -105,14 +105,14 @@ export class MemoryAdapter {
 }
 
 /**
- * `sharp` is a native Node module used by @nextlake/assets for image
+ * `sharp` is a native Node module used by @verevoir/assets for image
  * dimension extraction. It cannot load in the browser. This plugin
  * provides a no-op shim so Vite's dev pre-bundling doesn't crash.
  */
 function browserSharp(): Plugin {
   const VIRTUAL = '\0sharp';
   return {
-    name: 'nextlake-browser-sharp',
+    name: 'verevoir-browser-sharp',
     enforce: 'pre',
     resolveId(id) {
       if (id === 'sharp') return VIRTUAL;

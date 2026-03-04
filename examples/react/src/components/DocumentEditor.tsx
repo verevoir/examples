@@ -3,8 +3,8 @@ import {
   BlockEditor,
   useBlockForm,
   ReferenceOptionsProvider,
-} from '@nextlake/editor';
-import type { ReferenceOptionsMap, FieldOverrides } from '@nextlake/editor';
+} from '@verevoir/editor';
+import type { ReferenceOptionsMap, FieldOverrides } from '@verevoir/editor';
 import { storage } from '../storage';
 import { blocks } from '../blocks';
 import { useUser } from '../context/UserContext';

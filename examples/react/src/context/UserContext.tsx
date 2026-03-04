@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import type { Identity } from '@nextlake/access';
+import type { Identity } from '@verevoir/access';
 import { auth, roles } from '../access/auth';
 import type { Role } from '../access/auth';
 import { contentPolicy } from '../access/policy';

@@ -1,4 +1,4 @@
-import type { FieldEditorProps } from '@nextlake/editor';
+import type { FieldEditorProps } from '@verevoir/editor';
 import { useUser } from '../context/UserContext';
 
 const badgeColors: Record<string, React.CSSProperties> = {

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import type { Document } from '@nextlake/storage';
+import type { Document } from '@verevoir/storage';
 import { storage } from '../storage';
 import { useUser } from '../context/UserContext';
 

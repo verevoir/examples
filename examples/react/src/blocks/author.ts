@@ -1,4 +1,4 @@
-import { defineBlock, text, richText, select } from '@nextlake/schema';
+import { defineBlock, text, richText, select } from '@verevoir/schema';
 
 export const author = defineBlock({
   name: 'author',

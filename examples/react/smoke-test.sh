@@ -69,8 +69,8 @@ check "Home page has app root" "http://localhost:$PORT" 'id="root"'
 echo ""
 echo "=== Node integration: schema + storage ==="
 node --input-type=module << 'NODETEST'
-import { defineBlock, text, richText, select, boolean, number } from '@nextlake/schema';
-import { MemoryAdapter } from '@nextlake/storage';
+import { defineBlock, text, richText, select, boolean, number } from '@verevoir/schema';
+import { MemoryAdapter } from '@verevoir/storage';
 
 const storage = new MemoryAdapter();
 
@@ -151,9 +151,9 @@ NODETEST
 echo ""
 echo "=== Node integration: assets + media ==="
 node --input-type=module << 'ASSETTEST'
-import { AssetManager, MemoryBlobStore } from '@nextlake/assets';
-import { MemoryAdapter } from '@nextlake/storage';
-import { createAssetSource, buildImageUrl } from '@nextlake/media';
+import { AssetManager, MemoryBlobStore } from '@verevoir/assets';
+import { MemoryAdapter } from '@verevoir/storage';
+import { createAssetSource, buildImageUrl } from '@verevoir/media';
 
 const storage = new MemoryAdapter();
 const blobStore = new MemoryBlobStore();
@@ -210,7 +210,7 @@ ASSETTEST
 echo ""
 echo "=== Node integration: access control ==="
 node --input-type=module << 'ACCESSTEST'
-import { defineAuthAdapter, definePolicy, defineWorkflow, hasRole, or, ANONYMOUS, isAnonymous } from '@nextlake/access';
+import { defineAuthAdapter, definePolicy, defineWorkflow, hasRole, or, ANONYMOUS, isAnonymous } from '@verevoir/access';
 
 // Auth adapter
 const auth = defineAuthAdapter({

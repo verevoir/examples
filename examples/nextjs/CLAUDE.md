@@ -16,17 +16,17 @@ Data is stored in memory via `MemoryAdapter` (resets on server restart).
 
 ## Architecture
 
-- `src/blocks/` — Content model definitions using `@nextlake/schema`
-- `src/storage.ts` — `MemoryAdapter` singleton from `@nextlake/storage`
+- `src/blocks/` — Content model definitions using `@verevoir/schema`
+- `src/storage.ts` — `MemoryAdapter` singleton from `@verevoir/storage`
 - `src/assets.ts` — `AssetManager` + `MemoryBlobStore` singletons, `AssetSource` via `createAssetSource`, object URL mapping for browser preview, fake imgproxy config
 - `src/access/auth.ts` — Simulated Google auth adapter with three mock accounts; falls back to `ANONYMOUS` for unauthenticated requests
 - `src/access/policy.ts` — Content policy with admin/editor/author/viewer rules
 - `src/access/workflow.ts` — Publishing workflow (draft → review → published → archived)
-- `src/access/roles.ts` — `roleStore` singleton via `createRoleStore` from `@nextlake/access/role-store`, with seed admin for first deploy
+- `src/access/roles.ts` — `roleStore` singleton via `createRoleStore` from `@verevoir/access/role-store`, with seed admin for first deploy
 - `src/context/UserContext.tsx` — React context providing identity, signIn/signOut, `can()`, and workflow
 - `src/components/AuthButton.tsx` — Sign in (account picker) / sign out button with user info display
 - `src/components/StatusField.tsx` — Workflow-driven status badge + transition buttons (editor override)
-- `src/components/HeroImageField.tsx` — `ImageField` wrapper adapting `@nextlake/media` to editor's `FieldEditorProps`
+- `src/components/HeroImageField.tsx` — `ImageField` wrapper adapting `@verevoir/media` to editor's `FieldEditorProps`
 - `src/components/AssetBrowser.tsx` — Asset management page: upload, list, preview, hotspot editing, imgproxy URL display
 - `src/components/RoleBrowser.tsx` — Admin-gated role management page: list, assign, and remove user→role mappings
 - `src/components/DocumentEditor.tsx` — Where all six packages converge

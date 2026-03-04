@@ -5,7 +5,7 @@ import {
   select,
   boolean,
   reference,
-} from '@nextlake/schema';
+} from '@verevoir/schema';
 
 export const article = defineBlock({
   name: 'article',

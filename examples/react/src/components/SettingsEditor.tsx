@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BlockEditor, useBlockForm } from '@nextlake/editor';
+import { BlockEditor, useBlockForm } from '@verevoir/editor';
 import { storage } from '../storage';
 import { settings } from '../blocks';
 

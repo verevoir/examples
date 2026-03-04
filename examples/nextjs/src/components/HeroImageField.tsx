@@ -1,7 +1,7 @@
 'use client';
 
-import type { FieldEditorProps } from '@nextlake/editor';
-import { ImageField } from '@nextlake/media';
+import type { FieldEditorProps } from '@verevoir/editor';
+import { ImageField } from '@verevoir/media';
 
 export function HeroImageField({ value, onChange }: FieldEditorProps<string>) {
   return (

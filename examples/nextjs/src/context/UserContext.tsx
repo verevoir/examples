@@ -7,8 +7,8 @@ import {
   useEffect,
   useState,
 } from 'react';
-import type { Identity } from '@nextlake/access';
-import { ANONYMOUS, isAnonymous } from '@nextlake/access';
+import type { Identity } from '@verevoir/access';
+import { ANONYMOUS, isAnonymous } from '@verevoir/access';
 import { auth } from '@/access/auth';
 import { contentPolicy } from '@/access/policy';
 import { publishing } from '@/access/workflow';

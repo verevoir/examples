@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { AssetSourceProvider, ImgproxyConfigProvider } from '@nextlake/media';
+import { AssetSourceProvider, ImgproxyConfigProvider } from '@verevoir/media';
 import { UserProvider } from './context/UserContext';
 import { Sidebar } from './components/Sidebar';
 import { DocumentList } from './components/DocumentList';

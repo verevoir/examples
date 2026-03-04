@@ -33,7 +33,7 @@ body {
   line-height: 1.5;
 }
 
-/* Style bare elements rendered by @nextlake/editor */
+/* Style bare elements rendered by @verevoir/editor */
 [data-block] label {
   display: block;
   font-size: 0.875rem;

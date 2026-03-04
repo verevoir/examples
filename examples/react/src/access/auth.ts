@@ -1,17 +1,15 @@
-import { defineAuthAdapter } from '@nextlake/access';
-import type { Identity } from '@nextlake/access';
+import { createTestAuthAdapter } from '@verevoir/access/test-accounts';
+import type { TestAccount } from '@verevoir/access/test-accounts';
 
-const users: Record<string, Identity> = {
-  admin: { id: 'user-admin', roles: ['admin'] },
-  editor: { id: 'user-editor', roles: ['editor'] },
-  author: { id: 'user-author', roles: ['author'] },
-  viewer: { id: 'user-viewer', roles: ['viewer'] },
-};
+const testAccounts: TestAccount[] = [
+  { token: 'admin', identity: { id: 'user-admin', roles: ['admin'] } },
+  { token: 'editor', identity: { id: 'user-editor', roles: ['editor'] } },
+  { token: 'author', identity: { id: 'user-author', roles: ['author'] } },
+  { token: 'viewer', identity: { id: 'user-viewer', roles: ['viewer'] } },
+];
 
-export type Role = keyof typeof users;
+export type Role = (typeof testAccounts)[number]['token'];
 
-export const roles: Role[] = ['admin', 'editor', 'author', 'viewer'];
+export const roles: Role[] = testAccounts.map((a) => a.token);
 
-export const auth = defineAuthAdapter({
-  resolve: async (token) => users[token as string] ?? null,
-});
+export const auth = createTestAuthAdapter({ accounts: testAccounts });

@@ -1,4 +1,4 @@
-import { createRoleStore } from '@nextlake/access/role-store';
+import { createRoleStore } from '@verevoir/access/role-store';
 import { storage } from '@/storage';
 
 export const roleStore = createRoleStore({

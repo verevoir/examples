@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import type { Asset, Hotspot } from '@nextlake/assets';
-import { HotspotOverlay, buildImageUrl } from '@nextlake/media';
+import type { Asset, Hotspot } from '@verevoir/assets';
+import { HotspotOverlay, buildImageUrl } from '@verevoir/media';
 import {
   manager,
   uploadAsset,

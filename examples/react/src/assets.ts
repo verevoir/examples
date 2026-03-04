@@ -1,7 +1,7 @@
-import { AssetManager, MemoryBlobStore } from '@nextlake/assets';
-import type { Asset } from '@nextlake/assets';
-import { createAssetSource } from '@nextlake/media';
-import type { ImgproxyConfig } from '@nextlake/media';
+import { AssetManager, MemoryBlobStore } from '@verevoir/assets';
+import type { Asset } from '@verevoir/assets';
+import { createAssetSource } from '@verevoir/media';
+import type { ImgproxyConfig } from '@verevoir/media';
 import { storage } from './storage';
 
 const blobStore = new MemoryBlobStore();

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useUser } from '@/context/UserContext';
-import { mockAccounts } from '@/access/auth';
+import { testAccounts } from '@/access/auth';
 
 const signInBtnStyle: React.CSSProperties = {
   width: '100%',
@@ -77,7 +77,7 @@ export function AuthButton() {
       <div style={{ position: 'relative' }}>
         {showPicker && (
           <div style={accountListStyle}>
-            {mockAccounts.map((account) => (
+            {testAccounts.map((account) => (
               <button
                 key={account.token}
                 style={accountBtnStyle}
@@ -86,9 +86,12 @@ export function AuthButton() {
                   setShowPicker(false);
                 }}
               >
-                <div style={{ fontWeight: 600 }}>{account.name}</div>
+                <div style={{ fontWeight: 600 }}>
+                  {account.identity.metadata?.name as string}
+                </div>
                 <div style={{ color: 'var(--color-text-muted)' }}>
-                  {account.email} &middot; {account.role}
+                  {account.identity.metadata?.email as string} &middot;{' '}
+                  {account.identity.roles[0]}
                 </div>
               </button>
             ))}
@@ -98,7 +101,7 @@ export function AuthButton() {
           style={signInBtnStyle}
           onClick={() => setShowPicker(!showPicker)}
         >
-          Sign in with Google
+          Sign in (test accounts)
         </button>
       </div>
     );
