@@ -12,7 +12,9 @@ export const article = defineBlock({
   fields: {
     title: text('Title').max(120),
     author: reference('Author', 'author'),
-    body: richText('Body'),
+    body: richText('Body').hint(
+      'Engaging and informative. Short paragraphs, active voice.',
+    ),
     status: select('Status', ['draft', 'review', 'published', 'archived']),
     heroImage: reference('Hero Image', 'asset'),
     featured: boolean('Featured').default(false),
