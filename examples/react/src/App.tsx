@@ -6,6 +6,7 @@ import { DocumentList } from './components/DocumentList';
 import { DocumentEditor } from './components/DocumentEditor';
 import { SettingsEditor } from './components/SettingsEditor';
 import { AssetBrowser } from './components/AssetBrowser';
+import { ShopBrowser } from './components/ShopBrowser';
 import { source, imgproxyConfig } from './assets';
 
 export type Route =
@@ -34,7 +35,9 @@ export function App() {
 
   let content: React.ReactNode;
 
-  if (route.blockType === 'assets') {
+  if (route.blockType === 'shop') {
+    content = <ShopBrowser />;
+  } else if (route.blockType === 'assets') {
     content = <AssetBrowser />;
   } else if (route.blockType === 'settings') {
     content = <SettingsEditor />;

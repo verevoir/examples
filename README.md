@@ -1,13 +1,13 @@
-# NextLake Examples
+# Verevoir Examples
 
-Two example apps demonstrating all three NextLake v1 packages working together end-to-end.
+Two example apps demonstrating all seven Verevoir v1 packages working together end-to-end.
 
 | Example | Stack | Routing |
 |---------|-------|---------|
 | `examples/react/` | Vite + React SPA | `useState`-based |
 | `examples/nextjs/` | Next.js App Router | File-system routes |
 
-Both examples define the same content blocks (Article, Author, Settings) and use `MemoryAdapter` for in-memory persistence.
+Both examples define the same content blocks (Article, Author, Product, Settings), an asset manager, and a shop. Data is stored in memory via `MemoryAdapter`.
 
 ## Quick Start
 

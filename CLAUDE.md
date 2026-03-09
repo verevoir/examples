@@ -1,6 +1,6 @@
-# NextLake Examples
+# Verevoir Examples
 
-Two example apps demonstrating all six NextLake packages (`@verevoir/schema`, `@verevoir/storage`, `@verevoir/editor`, `@verevoir/access`, `@verevoir/assets`, `@verevoir/media`) working together end-to-end.
+Two example apps demonstrating all seven Verevoir packages (`@verevoir/schema`, `@verevoir/storage`, `@verevoir/editor`, `@verevoir/access`, `@verevoir/assets`, `@verevoir/media`, `@verevoir/commerce`) working together end-to-end.
 
 ## Structure
 
@@ -10,12 +10,14 @@ examples/
   nextjs/   — Next.js App Router with file-system routes
 ```
 
-Both examples define the same three content blocks plus an asset management page:
+Both examples define the same four content blocks plus asset management and a shop:
 
 - **Article** — text (.max), richText, select (draft/review/published/archived), boolean (.default), reference (→ author), reference (→ asset for hero image)
 - **Author** — text (.max), text (.regex for email), richText (.optional), select (author/editor/admin)
+- **Product** — text (.max), text (.optional), select (general/food/books/clothing), number (.min.default), select (GBP/USD/EUR), boolean (.default)
 - **Settings** — text, text (.optional), number (.int.min.max.default), boolean (.default)
 - **Assets** — upload images/videos, set hotspots, view generated imgproxy URLs
+- **Shop** — browse available products, basket with pricing/tax, checkout to order, payment simulation
 
 Block definitions are intentionally duplicated (not shared) to mirror real user usage.
 
@@ -44,6 +46,15 @@ Both examples integrate `@verevoir/assets` and `@verevoir/media` for asset manag
 - **AssetBrowser** — upload, list, preview, hotspot editing via `HotspotOverlay`, imgproxy URL display
 - **Providers** — `AssetSourceProvider` and `ImgproxyConfigProvider` wrap the app
 
+## Commerce Integration
+
+Both examples integrate `@verevoir/commerce` for shopping and checkout:
+
+- **Product content type** — content-managed products stored via `MemoryAdapter`, edited via `BlockEditor`
+- **Commerce configuration** — `toCommerceProduct` maps stored documents to commerce `Product` interface, `defaultConfig` provides 10% discount pricing engine and UK VAT tax engine (0% food/books, 20% general/clothing)
+- **ShopBrowser** — product catalog from storage, basket with quantity controls, subtotal/tax/total display, checkout to order, simulated payment confirmation
+- **Functional state** — basket and order state managed via React `useState`, all operations return new objects (no mutation)
+
 ## Integration Pattern
 
 1. Schema Engine defines blocks
@@ -52,8 +63,9 @@ Both examples integrate `@verevoir/assets` and `@verevoir/media` for asset manag
 4. Access controls who can do what, and drives workflow transitions
 5. Assets manages binary uploads and metadata
 6. Media provides image display, URL building, and asset picker components
+7. Commerce provides basket/order logic with pluggable pricing and tax engines
 
-Settings uses a singleton pattern (one document). Article and Author use a collection pattern (list + create/edit).
+Settings uses a singleton pattern (one document). Article, Author, and Product use a collection pattern (list + create/edit).
 
 ## Setup
 

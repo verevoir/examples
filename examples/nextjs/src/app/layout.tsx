@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'NextLake — Next.js Example',
+  title: 'Verevoir — Next.js Example',
 };
 
 export default function RootLayout({

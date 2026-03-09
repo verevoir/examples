@@ -1,12 +1,12 @@
-# Intent — NextLake Examples
+# Intent — Verevoir Examples
 
 ## Purpose
 
-Demonstrate all six NextLake packages working together end-to-end in realistic application contexts. The examples serve as both a proving ground for the library design and a starting point for developers evaluating NextLake.
+Demonstrate all seven Verevoir packages working together end-to-end in realistic application contexts. The examples serve as both a proving ground for the library design and a starting point for developers evaluating Verevoir.
 
 ## Goals
 
-- Show the full integration path: content models, storage, editing, access control, assets, and media display
+- Show the full integration path: content models, storage, editing, access control, assets, media display, and commerce
 - Cover two major React frameworks (Vite SPA and Next.js App Router) to prove framework flexibility
 - Be runnable with zero infrastructure — in-memory adapters, no database, no external services
 - Surface integration pain points early so the library APIs can be improved
@@ -29,4 +29,4 @@ Demonstrate all six NextLake packages working together end-to-end in realistic a
 
 - Both examples must build and pass smoke tests via `make test`
 - No shared code between the React and Next.js examples
-- Dependencies reference NextLake packages via git+ssh with version tags (except assets/media which use `#main` pre-release)
+- Dependencies reference Verevoir packages via npm registry at exact pre-release versions

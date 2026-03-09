@@ -48,6 +48,8 @@ const roleLabelStyle: CSSProperties = {
 const blockTypes = [
   { key: 'article', label: 'Articles' },
   { key: 'author', label: 'Authors' },
+  { key: 'product', label: 'Products' },
+  { key: 'shop', label: 'Shop' },
   { key: 'assets', label: 'Assets' },
   { key: 'settings', label: 'Settings' },
 ];
@@ -62,7 +64,7 @@ export function Sidebar({ active, onNavigate }: SidebarProps) {
 
   return (
     <nav style={sidebarStyle}>
-      <div style={logoStyle}>NextLake</div>
+      <div style={logoStyle}>Verevoir</div>
       {blockTypes.map(({ key, label }) => (
         <button
           key={key}

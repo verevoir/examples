@@ -29,6 +29,8 @@ const authSectionStyle: React.CSSProperties = {
 const blockTypes = [
   { key: 'article', label: 'Articles' },
   { key: 'author', label: 'Authors' },
+  { key: 'product', label: 'Products' },
+  { key: 'shop', label: 'Shop' },
   { key: 'assets', label: 'Assets' },
   { key: 'settings', label: 'Settings' },
   { key: 'roles', label: 'Roles' },
@@ -41,7 +43,7 @@ export function Sidebar() {
     <nav style={sidebarStyle}>
       <div style={logoStyle}>
         <Link href="/" style={{ color: 'inherit', textDecoration: 'none' }}>
-          NextLake
+          Verevoir
         </Link>
       </div>
       {blockTypes.map(({ key, label }) => {

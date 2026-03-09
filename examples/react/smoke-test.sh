@@ -208,6 +208,92 @@ if (afterDelete.length === 0) {
 ASSETTEST
 
 echo ""
+echo "=== Node integration: commerce ==="
+node --input-type=module << 'COMMERCETEST'
+import {
+  money, createBasket, addItem, removeItem, updateItemQuantity,
+  basketTotal, convertToOrder, applyPayment, updatePaymentStatus,
+  isFullyPaid, changeOwed, orderTotals,
+  percentageDiscountEngine, productTypeTaxEngine,
+} from '@verevoir/commerce';
+
+// Money helpers
+const price = money(25, 'GBP');
+if (price.amount !== 25 || price.currency !== 'GBP') { console.log('✗ money()'); process.exit(1); }
+console.log('✓ money()');
+
+// Product
+const book = { id: 'p1', type: 'books', basePrice: money(30, 'GBP') };
+const shirt = { id: 'p2', type: 'clothing', basePrice: money(25, 'GBP') };
+
+// Config with 10% discount + UK VAT
+const config = {
+  pricingEngines: [percentageDiscountEngine(0.1)],
+  taxEngine: productTypeTaxEngine({ books: 0, clothing: 0.2, general: 0.2 }, 0.2),
+};
+
+// Basket
+let basket = createBasket('b1');
+basket = addItem(basket, book, 2, config);
+basket = addItem(basket, shirt, 1, config);
+if (basket.items.length !== 2) { console.log('✗ addItem'); process.exit(1); }
+console.log('✓ addItem — 2 line items');
+
+// Book: 30 * 0.9 = 27, 0% tax, line = 27 * 2 = 54
+const bookItem = basket.items.find(i => i.productId === 'p1');
+if (bookItem.unitPrice.amount !== 27 || bookItem.tax.amount !== 0) { console.log('✗ book pricing'); process.exit(1); }
+console.log('✓ Book pricing: £27.00, 0% tax');
+
+// Shirt: 25 * 0.9 = 22.5, 20% tax = 4.5, line = (22.5 + 4.5) * 1 = 27
+const shirtItem = basket.items.find(i => i.productId === 'p2');
+if (shirtItem.unitPrice.amount !== 22.5 || shirtItem.tax.amount !== 4.5) { console.log('✗ shirt pricing'); process.exit(1); }
+console.log('✓ Shirt pricing: £22.50, £4.50 tax');
+
+// Basket totals
+const totals = basketTotal(basket);
+if (!totals || totals.subtotal.amount !== 76.5 || totals.tax.amount !== 4.5 || totals.total.amount !== 81) {
+  console.log('✗ basketTotal'); process.exit(1);
+}
+console.log('✓ basketTotal: subtotal=76.50, tax=4.50, total=81.00');
+
+// Update quantity
+basket = updateItemQuantity(basket, 'p2', 3, shirt, config);
+const updated = basket.items.find(i => i.productId === 'p2');
+if (updated.quantity !== 3) { console.log('✗ updateItemQuantity'); process.exit(1); }
+console.log('✓ updateItemQuantity');
+
+// Remove item
+basket = removeItem(basket, 'p2');
+if (basket.items.length !== 1) { console.log('✗ removeItem'); process.exit(1); }
+console.log('✓ removeItem');
+
+// Re-add for order test
+basket = addItem(basket, shirt, 1, config);
+
+// Convert to order
+const order = convertToOrder(basket, 'ord-1');
+if (order.items.length !== 2 || order.balance.amount !== 81) { console.log('✗ convertToOrder'); process.exit(1); }
+console.log('✓ convertToOrder: balance=81.00');
+
+// Apply payment
+let paid = applyPayment(order, { id: 'pay-1', amount: money(81, 'GBP'), status: 'confirmed' });
+if (!isFullyPaid(paid) || paid.balance.amount !== 0) { console.log('✗ applyPayment'); process.exit(1); }
+console.log('✓ applyPayment: fully paid');
+
+// Overpayment / change
+let over = applyPayment(order, { id: 'pay-2', amount: money(100, 'GBP'), status: 'confirmed' });
+if (!isFullyPaid(over) || changeOwed(over).amount !== 19) { console.log('✗ changeOwed'); process.exit(1); }
+console.log('✓ changeOwed: £19.00');
+
+// Payment status update
+let pending = applyPayment(order, { id: 'pay-3', amount: money(81, 'GBP'), status: 'pending' });
+if (isFullyPaid(pending)) { console.log('✗ pending should not be paid'); process.exit(1); }
+pending = updatePaymentStatus(pending, 'pay-3', 'confirmed');
+if (!isFullyPaid(pending)) { console.log('✗ confirmed should be paid'); process.exit(1); }
+console.log('✓ updatePaymentStatus: pending → confirmed');
+COMMERCETEST
+
+echo ""
 echo "=== Node integration: access control ==="
 node --input-type=module << 'ACCESSTEST'
 import { defineAuthAdapter, definePolicy, defineWorkflow, hasRole, or, ANONYMOUS, isAnonymous } from '@verevoir/access';
