@@ -10,13 +10,13 @@
     "lint": "eslint . && prettier --check ."
   },
   "dependencies": {
-    "@verevoir/access": "0.2.0-beta.1",
-    "@verevoir/commerce": "0.1.0-beta.1",
-    "@verevoir/editor": "0.3.5-beta.1",
-    "@verevoir/schema": "0.3.1-beta.1",
-    "@verevoir/assets": "0.5.0-beta.1",
-    "@verevoir/media": "0.2.0-beta.1",
-    "@verevoir/storage": "0.3.0-beta.1",
+    "@verevoir/access": "^1.0.0",
+    "@verevoir/commerce": "^1.0.0",
+    "@verevoir/editor": "^1.0.0",
+    "@verevoir/schema": "^1.0.0",
+    "@verevoir/assets": "^1.0.0",
+    "@verevoir/media": "^1.0.0",
+    "@verevoir/storage": "^1.0.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "zod": "^3.25.76"
