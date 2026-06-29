@@ -1,37 +1,22 @@
 import type { NextConfig } from 'next';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
-  webpack: (config, { isServer }) => {
-    // @verevoir/storage bundles PostgresAdapter alongside MemoryAdapter.
-    // We only use MemoryAdapter, but webpack can't tree-shake the pg
-    // dependency, so stub out the Node-only modules it requires.
-    //
-    // @verevoir/assets dynamically imports `sharp` for image dimension
-    // extraction. Sharp is a native Node module that pulls in
-    // child_process, crypto, os, etc. — all unavailable in the browser.
-    // We alias it to a no-op shim so webpack doesn't try to bundle it.
-    if (!isServer) {
-      config.resolve = {
-        ...config.resolve,
-        alias: {
-          ...config.resolve?.alias,
-          sharp: path.join(__dirname, 'src', 'shims', 'sharp.js'),
-        },
-        fallback: {
-          ...config.resolve?.fallback,
-          fs: false,
-          dns: false,
-          net: false,
-          tls: false,
-          'pg-native': false,
-        },
-      };
-    }
-    return config;
+  turbopack: {
+    resolveAlias: {
+      // @verevoir/assets dynamically imports `sharp` for image dimension
+      // extraction. Sharp is a native Node module unavailable in the browser.
+      sharp: './src/shims/sharp.js',
+
+      // @verevoir/storage bundles PostgresAdapter alongside MemoryAdapter.
+      // Turbopack (unlike webpack) does not auto-stub Node.js built-ins for
+      // browser bundles, so alias the modules pg pulls in to a no-op shim.
+      dns: './src/shims/empty.js',
+      fs: './src/shims/empty.js',
+      net: './src/shims/empty.js',
+      tls: './src/shims/empty.js',
+      'util/types': './src/shims/empty.js',
+      'pg-native': './src/shims/empty.js',
+    },
   },
 };
 
